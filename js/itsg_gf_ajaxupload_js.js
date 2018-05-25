@@ -187,7 +187,6 @@ function itsg_gf_ajaxupload_init(){
 
 	//applies the fileupload function to the file input field
 	jQuery( 'input.itsg_ajax_upload_browse' ).each(function () {
-		var form_id = jQuery( this ).parents( 'form' ).attr( 'id' ).split( '_' ).pop().trim();
 		jQuery( this ).fileupload({
 			maxNumberOfFiles: 1,
 			singleFileUploads: false,
