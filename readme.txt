@@ -1,10 +1,10 @@
-=== Ajax Upload for Gravity Forms ===
+﻿=== Ajax Upload for Gravity Forms ===
 Contributors: ovann86
-Donate link: http://www.itsupportguides.com/
+Donate link: https://www.itsupportguides.com/donate/
 Tags: gravity forms, forms, ajax, file, upload, wcag, accessibility
-Requires at least: 4.7.0
-Tested up to: 4.7.2
-Stable tag: 2.7.3
+Requires at least: 4.8
+Tested up to: 4.9
+Stable tag: 2.8.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Provides two ajax file upload fields - a single field and the ability to make th
 
 == Description ==
 
-> This plugin is an add-on for the <a href="https://www.e-junkie.com/ecom/gb.php?cl=54585&c=ib&aff=299380" target="_blank">Gravity Forms</a> (affiliate link) plugin. If you don't yet own a license for Gravity Forms - <a href="https://www.e-junkie.com/ecom/gb.php?cl=54585&c=ib&aff=299380" target="_blank">buy one now</a>! (affiliate link)
+> This plugin is an add-on for the <a href="https://rocketgenius.pxf.io/c/1210785/445235/7938" target="_blank">Gravity Forms</a> (affiliate link) plugin. If you don't yet own a license for Gravity Forms - <a href="https://rocketgenius.pxf.io/c/1210785/445235/7938" target="_blank">buy one now</a>! (affiliate link)
 
 **What does this plugin do?**
 
@@ -155,8 +155,17 @@ function my_itsg_gf_ajaxupload_response( $upload_file, $form_id, $field_id ) {
 
 == Changelog ==
 
+= 2.8.0 =
+* Feature: ability to control if attachments included in notification emails are in ZIP file or not. See 'Zip uploads' option in notification settings.
+
+= 2.7.5 =
+* Maintenance: add check to clear buffer before ajax request is returned to browser.
+
+= 2.7.4 =
+* Fix: Improve Gravity Flow support - allow Gravity Flow to output the correct value/format depending on the form editable status.
+
 = 2.7.3 =
-Fix: Update upload handler (blueimp file uploader) to version 9.17.0 to resolve upload issue in Chrome for Android and intermittent issue in Firefox.
+* Fix: Update upload handler (blueimp file uploader) to version 9.17.0 to resolve upload issue in Chrome for Android and intermittent issue in Firefox.
 
 = 2.7.2 =
 * Fix: resolve conflict with <a href="https://wordpress.org/plugins/gravity-forms-list-field-select-drop-down/" target="_blank">Drop Down Options in List Fields for Gravity Forms</a> plugin

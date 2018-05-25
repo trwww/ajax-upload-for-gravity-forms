@@ -5,7 +5,7 @@
 if ( class_exists( 'GFForms' ) ) {
 	GFForms::include_addon_framework();
 	class GFAjaxFileUpload extends GFAddOn {
-		protected $_version = '2.7.3';
+		protected $_version = '2.8.0';
 		protected $_min_gravityforms_version = '1.7.9999';
 		protected $_slug = 'gfajaxfileupload';
 		protected $_full_path = __FILE__;

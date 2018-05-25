@@ -2,7 +2,7 @@
 /*
 Plugin Name: Ajax Upload for Gravity Forms
 Description: Provides two ajax file upload fields - a single field and the ability to make a list field column an upload field.
-Version: 2.7.3
+Version: 2.8.0
 Author: Adrian Gordon
 Author URI: http://www.itsupportguides.com
 License: GPL2
@@ -537,6 +537,7 @@ if ( !class_exists( 'ITSG_GF_AjaxUpload' ) ) {
 			if ( 'form_saved' != rgar( $notification, 'event' ) && 'form_save_email_requested' != rgar( $notification, 'event' ) ) {
 				$setting_title = __( 'Ajax Upload', 'ajax-upload-for-gravity-forms' );
 				$setting_option_include = __( 'Include uploads in notification', 'ajax-upload-for-gravity-forms' );
+				$setting_option_include_zip = __( 'Zip uploads', 'ajax-upload-for-gravity-forms' );
 				$setting_option_include_filename = __( 'Zip file name', 'ajax-upload-for-gravity-forms' );
 				$setting_option_delete = __( 'Delete files after notification sent', 'ajax-upload-for-gravity-forms' );
 
@@ -551,15 +552,16 @@ if ( !class_exists( 'ITSG_GF_AjaxUpload' ) ) {
 							<label class="inline" for="itsg_ajaxupload_include_files_email">'. $setting_option_include .'</label>
 						</td>
 					</tr>';
-				$value = empty( $notification['itsg_ajaxupload_delete_files_submit'] ) ? '' : "checked='checked'";
-				$ui_settings['itsg_ajaxupload_delete_files_submit'] = '
+				$value = empty( $notification['itsg_ajaxupload_include_files_email'] ) || 'on' !== rgar( $notification, 'itsg_ajaxupload_include_files_zip_email') && isset( $notification['itsg_ajaxupload_include_files_zip_email'] ) ? '' : "checked='checked'";
+				$ui_settings['itsg_ajaxupload_include_files_zip_email'] = '
 					<tr>
 						<th scope="row"></th>
 						<td>
-							<input id="itsg_ajaxupload_delete_files_submit" type="checkbox" '. $value .' name="itsg_ajaxupload_delete_files_submit">
-							<label class="inline" for="itsg_ajaxupload_delete_files_submit">'. $setting_option_delete .'</label>
+							<input id="itsg_ajaxupload_include_files_zip_email" type="checkbox" '. $value .' name="itsg_ajaxupload_include_files_zip_email">
+							<label class="inline" for="itsg_ajaxupload_include_files_zip_email">'. $setting_option_include_zip .'</label>
 						</td>
 					</tr>';
+				
 				$ajax_upload_options = ITSG_GF_AjaxUpload::get_options();
 				$zip_file_name = rgar( $ajax_upload_options, 'zip_file_name' );
 				$value = empty( $notification['itsg_ajaxupload_include_files_email_filename'] ) ? $zip_file_name : $notification['itsg_ajaxupload_include_files_email_filename'];
@@ -570,6 +572,15 @@ if ( !class_exists( 'ITSG_GF_AjaxUpload' ) ) {
 							<input id="itsg_ajaxupload_include_files_email_filename" class="merge-tag-support mt-hide_all_fields fieldwidth-2" type="text" value="'. $value .'" name="itsg_ajaxupload_include_files_email_filename">
 						</td>
 					</tr>';
+				$value = empty( $notification['itsg_ajaxupload_delete_files_submit'] ) ? '' : "checked='checked'";
+				$ui_settings['itsg_ajaxupload_delete_files_submit'] = '
+					<tr>
+						<th scope="row"></th>
+						<td>
+							<input id="itsg_ajaxupload_delete_files_submit" type="checkbox" '. $value .' name="itsg_ajaxupload_delete_files_submit">
+							<label class="inline" for="itsg_ajaxupload_delete_files_submit">'. $setting_option_delete .'</label>
+						</td>
+					</tr>';
 			}
 
 			return $ui_settings;
@@ -577,6 +588,7 @@ if ( !class_exists( 'ITSG_GF_AjaxUpload' ) ) {
 
 		function notification_save( $notification, $form ) {
 			$notification['itsg_ajaxupload_include_files_email'] = rgpost( 'itsg_ajaxupload_include_files_email' );
+			$notification['itsg_ajaxupload_include_files_zip_email'] = rgpost( 'itsg_ajaxupload_include_files_zip_email' );
 			$notification['itsg_ajaxupload_delete_files_submit'] = rgpost( 'itsg_ajaxupload_delete_files_submit' );
 			$notification['itsg_ajaxupload_include_files_email_filename'] = rgpost( 'itsg_ajaxupload_include_files_email_filename' );
 			return $notification;
@@ -705,6 +717,11 @@ if ( !class_exists( 'ITSG_GF_AjaxUpload' ) ) {
 
 			$upload_file = apply_filters( 'itsg_gf_ajaxupload_response', $upload_file, $form_id, $field_id );
 
+			//length or false if no buffer - clean buffer
+			if ( ob_get_length() ) {
+				ob_clean();
+			}
+
 			die( json_encode( $upload_file ) );
 		} // END itsg_ajaxupload_upload_file
 
@@ -724,7 +741,7 @@ if ( !class_exists( 'ITSG_GF_AjaxUpload' ) ) {
 
 				if ( sizeof( $uploaded_files ) >= 1 ) {
 
-					if ( class_exists( 'ZipArchive' ) ) {
+					if ( class_exists( 'ZipArchive' ) && ! ( 'on' !== rgar( $notification, 'itsg_ajaxupload_include_files_zip_email') && isset( $notification['itsg_ajaxupload_include_files_zip_email'] ) ) ) {
 						$zip_file = $this->create_zip_file( $form, $entry_id, $uploaded_files, $notification );
 						$attachments[] = $zip_file;
 					} else {

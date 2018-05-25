@@ -76,6 +76,9 @@ if ( !class_exists( 'ITSG_GF_AjaxUpload_ListField' ) ) {
 			if ( $value ) {
 				$is_entry_detail = GFCommon::is_entry_detail();
 				if ( !( $is_entry_detail && 'edit' == rgpost( 'screen_mode' ) ) && is_object( $field ) && 'list' == $field->get_input_type() ) {
+					if ( $field->gravityflow_is_editable ) {
+						return $value;
+					}
 					$has_columns = is_array( $field->choices );
 					$values = unserialize( $value );
 						if ( !empty( $values ) ) {
